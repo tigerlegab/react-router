@@ -1,0 +1,45 @@
+{
+  "name": "@tigerlegab/react-router",
+  "version": "0.1.0",
+  "description": "Simple router for react with data loader.",
+  "private": false,
+  "main": "esm/index.js",
+  "types": "esm/index.d.ts",
+  "type": "module",
+  "files": [
+    "esm"
+  ],
+  "exports": {
+    ".": {
+      "types": "./esm/index.d.ts",
+      "default": "./esm/index.js"
+    }
+  },
+  "scripts": {
+    "clean": "rimraf esm",
+    "build": "yarn clean && tsc",
+    "prepublishOnly": "yarn build"
+  },
+  "keywords": [
+    "react",
+    "router"
+  ],
+  "author": "Gabriel Jefferson Boltron <gabrielboltron@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "url": "https://github.com/tigerlegab/react-router",
+    "type": "git"
+  },
+  "peerDependencies": {
+    "react": ">=19.0.0-rc-8269d55d-20240802"
+  },
+  "dependencies": {
+    "regexparam": "^3.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "npm:types-react@rc",
+    "react": "19.0.0-rc-8269d55d-20240802",
+    "rimraf": "^6.0.1",
+    "typescript": "^5.5.4"
+  }
+}
