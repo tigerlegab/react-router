@@ -18,7 +18,7 @@ let _subscribers = new Set<() => void>();
 const navigate = (path: string, options: NavigateOptions = {}) => {
    const _q_ = options.search && options.search !== true ? options.search : (options.search === true ? window.location.search : "");
    const _s_ = options.state && options.state !== true ? options.state : window.history.state;
-   const _n_ = (path ? path : window.location.pathname) + (_q_.startsWith("?") ? _q_ : "?" + _q_);
+   const _n_ = (path ? path : window.location.pathname) + (!_q_ || _q_.startsWith("?") ? _q_ : "?" + _q_);
 
    if (_q_) {
       const _p = new window.URLSearchParams(_q_);

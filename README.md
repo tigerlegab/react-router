@@ -1,4 +1,4 @@
-# react-router &middot; [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/tigerlegab/react-router/LICENSE) [![Published on NPM](https://img.shields.io/npm/v/@tigerlegab/react-router.svg)](https://www.npmjs.com/package/@tigerlegab/react-router) [![Minified size](https://img.shields.io/bundlephobia/min/@tigerlegab/react-router.svg)](https://bundlephobia.com/package/@tigerlegab/react-router) [![Tree-shakeable](https://badgen.net/bundlephobia/tree-shaking/@tigerlegab/react-router)](https://github.com/tigerlegab/react-router)
+# react-router &middot; [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/tigerlegab/react-router/LICENSE) [![Published on NPM](https://img.shields.io/npm/v/@tigerlegab/react-router.svg)](https://www.npmjs.com/package/@tigerlegab/react-router) [![Minified size](https://img.shields.io/bundlephobia/min/@tigerlegab/react-router.svg)](https://bundlephobia.com/package/@tigerlegab/react-router)
 
 Simple router for react with data loader.
 
@@ -237,3 +237,7 @@ interface NavigateOptions {
    search?: boolean | string;
 }
 ```
+
+## Developement issue
+
+1. Currently, hot reload not working in development. You need to refresh the browser to view the updates.
