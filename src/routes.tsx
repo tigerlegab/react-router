@@ -57,9 +57,12 @@ export function Routes({ routes, ...props }: RoutesProps) {
             else {
                setContent({
                   element: routematch.route.element,
-                  params: routematch.params
+                  params: undefined,
+                  data: undefined
                });
             }
+         } else {
+            setContent(null);
          }
          locationStatus.setStatus("loaded");
       };

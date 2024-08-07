@@ -199,12 +199,13 @@ interface Route {
 
 ## Hooks
 
-* `useLocation` - Returns the current location data.
-* `useLocationStatus` - Returns location status namely: pending, loaded.
+* `useLocation` - Listens to location changes and returns the current location data.
+* `useLocationStatus` - Listens to location status changes and returns the current location status. Statuses are `pending` and `loaded`.
 
 ## Utils
+Functions that can also be used outside of react.
 
-* `navigate` - Navigates to a new route or location.
+* `navigate` - Navigates to a new browser location.
 * `getBrowserLocation` - Returns the current location data.
 
 ## Location data
@@ -240,4 +241,4 @@ interface NavigateOptions {
 
 ## Developement issue
 
-1. Currently, hot reload not working in development. You need to refresh the browser to view the updates.
+1. Hot reload not working in development. You need to refresh the browser to view the updates.
