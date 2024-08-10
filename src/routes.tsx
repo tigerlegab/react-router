@@ -1,7 +1,7 @@
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { browserLocation } from "./browser-location";
 import { locationStatus } from "./location-status";
-import { parse } from "regexparam";
+import { parseRoute } from "./parseRoute";
 
 export interface RoutesProps {
    routes: Route[];
@@ -80,20 +80,8 @@ export function Routes({ routes, ...props }: RoutesProps) {
 
 function getMatch(routes: Route[], path: string) {
    if (!path) return undefined;
-   const { pattern, keys } = parse(path);
    for (const route of routes) {
-      const matches = pattern.exec(route.path);
-      if (matches) {
-         const params = getMatchValue(matches, keys);
-         return { route, params };
-      }
+      const params = parseRoute(route.path, path);
+      if (params) return { route, params };
    }
-}
-
-function getMatchValue(matches: RegExpExecArray, keys: string[]) {
-   let i = 0, out: { [x: string]: any; } = {};
-   while (i < keys.length) {
-      out[keys[i]] = matches[++i] || null;
-   }
-   return out;
 }

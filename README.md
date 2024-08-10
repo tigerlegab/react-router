@@ -1,4 +1,4 @@
-# react-router &middot; [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/tigerlegab/react-router/LICENSE) [![Published on NPM](https://img.shields.io/npm/v/@tigerlegab/react-router.svg)](https://www.npmjs.com/package/@tigerlegab/react-router) [![Minified size](https://img.shields.io/bundlephobia/min/@tigerlegab/react-router.svg)](https://bundlephobia.com/package/@tigerlegab/react-router)
+# react-router &middot; [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/tigerlegab/react-router/LICENSE) [![Published on NPM](https://img.shields.io/npm/v/@tigerlegab/react-router.svg)](https://www.npmjs.com/package/@tigerlegab/react-router) [![Minified size](https://img.shields.io/bundlephobia/min/@tigerlegab/react-router.svg)](https://bundlephobia.com/package/@tigerlegab/react-router) [![Tree-shakeable](https://badgen.net/bundlephobia/tree-shaking/@tigerlegab/react-router)](https://github.com/@tigerlegab/react-router)
 
 Simple router for react with data loader.
 
@@ -207,6 +207,7 @@ Functions that can also be used outside of react.
 
 * `navigate` - Navigates to a new browser location.
 * `getBrowserLocation` - Returns the current location data.
+* `parseRoute` - Check if the route matches current pathname and returns the route value. Uses [`regexparam`](https://github.com/lukeed/regexparam).
 
 ## Location data
 
@@ -238,6 +239,23 @@ interface NavigateOptions {
    search?: boolean | string;
 }
 ```
+
+## `parseRoute` usage
+
+```ts
+parseRoute("/item", "/item")
+//=> {}
+
+parseRoute("/item/:id", "/item")
+//=> undefined
+
+parseRoute("/item/:id?", "/item")
+//=> { id: null }
+
+parseRoute("/item/:id?", "/item/0001")
+//=> { id: "0001" }
+```
+See [regexparam usage](https://github.com/lukeed/regexparam/blob/main/readme.md#usage) for more info.
 
 ## Developement issue
 

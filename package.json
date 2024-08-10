@@ -1,20 +1,16 @@
 {
   "name": "@tigerlegab/react-router",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Simple router for react with data loader.",
   "private": false,
+  "sideEffects": false,
   "main": "esm/index.js",
+  "module": "esm/index.js",
   "types": "esm/index.d.ts",
   "type": "module",
   "files": [
     "esm"
   ],
-  "exports": {
-    ".": {
-      "types": "./esm/index.d.ts",
-      "default": "./esm/index.js"
-    }
-  },
   "scripts": {
     "clean": "rimraf esm",
     "build": "yarn clean && tsc",
