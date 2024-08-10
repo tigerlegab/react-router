@@ -6,7 +6,10 @@ import { parseRoute } from "./parseRoute";
 export interface RoutesProps {
    routes: Route[];
    page404: React.ReactNode;
-   pageLoader?: React.ReactNode;
+   pageLoader?: {
+      element: React.ReactNode;
+      firstLoadOnly?: boolean;
+   };
 }
 
 export interface Route {
@@ -35,6 +38,7 @@ export function Routes({ routes, ...props }: RoutesProps) {
    const location = useLocation();
    const status = useLocationStatus();
    const [content, setContent] = useState<RouteContent | null>(null);
+   const [firstLoad, setFirstLoad] = useState(true);
 
    useEffect(() => {
       browserLocation.navigate("", { replace: true, search: true, state: true });
@@ -64,6 +68,7 @@ export function Routes({ routes, ...props }: RoutesProps) {
          } else {
             setContent(null);
          }
+         setFirstLoad(false);
          locationStatus.setStatus("loaded");
       };
 
@@ -72,7 +77,11 @@ export function Routes({ routes, ...props }: RoutesProps) {
       }
    }, [location.path]);
 
-   if (status === "pending" && props.pageLoader) return props.pageLoader;
+   if (status === "pending"
+      && props.pageLoader
+      && (!props.pageLoader.firstLoadOnly || (props.pageLoader.firstLoadOnly && firstLoad)))
+      return props.pageLoader.element;
+
    if (!content) return props.page404;
    if (typeof content.element !== "function") return <>{content.element}</>;
    return <content.element params={content.params} data={content.data} />;

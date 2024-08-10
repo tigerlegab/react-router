@@ -1,4 +1,4 @@
-# react-router &middot; [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/tigerlegab/react-router/LICENSE) [![Published on NPM](https://img.shields.io/npm/v/@tigerlegab/react-router.svg)](https://www.npmjs.com/package/@tigerlegab/react-router) [![Minified size](https://img.shields.io/bundlephobia/min/@tigerlegab/react-router.svg)](https://bundlephobia.com/package/@tigerlegab/react-router) [![Tree-shakeable](https://badgen.net/bundlephobia/tree-shaking/@tigerlegab/react-router)](https://github.com/@tigerlegab/react-router)
+# react-router &middot; [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/tigerlegab/react-router/blob/main/LICENSE) [![Published on NPM](https://img.shields.io/npm/v/@tigerlegab/react-router.svg)](https://www.npmjs.com/package/@tigerlegab/react-router) [![Minified size](https://img.shields.io/bundlephobia/min/@tigerlegab/react-router.svg)](https://bundlephobia.com/package/@tigerlegab/react-router) [![Tree-shakeable](https://badgen.net/bundlephobia/tree-shaking/@tigerlegab/react-router)](https://bundlephobia.com/package/@tigerlegab/react-router)
 
 Simple router for react with data loader.
 
@@ -40,7 +40,7 @@ export default function App() {
       <Routes
          routes={routes}
          page404={<NotFound />}
-         pageLoader={<Spinner />}
+         pageLoader={{ element: <Spinner /> }}
       />
    );
 }
@@ -98,7 +98,7 @@ export default function Layout() {
             <Routes
                routes={routes}
                page404={<NotFound />}
-               pageLoader={<Spinner />}
+               pageLoader={{ element: <Spinner /> }}
             />
          </main>
       </>
@@ -113,7 +113,6 @@ If your going to navigate to `/my-user-id`, it will look for the matching route,
 ```tsx
 export default function Layout() {
    const status = useLocationStatus();
-   const isFirstLoad = useFirstLoad();
    const [progress, setProgress] = useState(0);
 
    useEffect(() => {
@@ -145,9 +144,7 @@ export default function Layout() {
             <Routes
                routes={routes}
                page404={<NotFound />}
-               // show only the page loader at first load 
-               // to freeze the current screen when navigating
-               pageLoader={isFirstLoad ? <Spinner /> : undefind}
+               pageLoader={{ element: <Spinner />, firstLoadOnly: true }}
             />
          </main>
       </>
@@ -177,7 +174,12 @@ interface RoutesProps {
     * @optional
     * Default display if location status is in pending state
     */
-   pageLoader?: React.ReactNode;
+   pageLoader?: {
+      // Element of the pageLoader.
+      element: React.ReactNode;
+      // Option to show pageLoader at first load only.
+      firstLoadOnly?: boolean;
+   };
 }
 
 interface Route {
