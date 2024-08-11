@@ -1,6 +1,6 @@
 {
   "name": "@tigerlegab/react-router",
-  "version": "0.1.4",
+  "version": "0.2.0",
   "description": "Simple router for react with data loader.",
   "private": false,
   "sideEffects": false,

@@ -1,6 +1,5 @@
-import { browserLocation } from "./browser-location";
-
-export const navigate = browserLocation.navigate;
-export const getBrowserLocation = browserLocation.current;
-export * from "./parseRoute";
-export * from "./routes";
+export type { BrowserRoute, BrowserLocation, BrowserRouter, NavigateOptions } from "./browserRouter";
+export { useBrowserLocation, useNavigationStatus } from "./hooks";
+export { navigate, getBrowserLocation } from "./utils";
+export { parseRoute } from "./parseRoute";
+export * from "./Router";

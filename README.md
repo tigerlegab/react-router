@@ -2,53 +2,7 @@
 
 Simple router for react with data loader.
 
-## Examples
-
-### With lazy loading
-
-```tsx
-import { ComponentType, ComponentProps, lazy, Suspense } from "react";
-import { Route, Routes } from "@tigerlegab/react-router";
-import { Spinner } from "./Spinner";
-
-// lazy loader function
-function lazyLoad<T extends ComponentType<any>>(factory: () => Promise<{ default: T; }>) {
-   const Component = lazy(factory);
-   return (props: ComponentProps<T>) => (
-      <Suspense fallback={<Spinner />}>
-         <Component {...props} />
-      </Suspense>
-   );
-}
-
-const SignIn = lazyLoad(() => import("./SignIn"));
-const SignUp = lazyLoad(() => import("./SignUp"));
-const NotFound = lazyLoad(() => import("./NotFound"));
-const routes: Route[] = [
-   {
-      path: "/",
-      element: <SignIn />,
-   },
-   {
-      path: "/sign-up",
-      element: <SignUp />,
-   }
-];
-
-export default function App() {
-   return (
-      <Routes
-         routes={routes}
-         page404={<NotFound />}
-         pageLoader={{ element: <Spinner /> }}
-      />
-   );
-}
-```
-
-It is always a good idea to wrap a lazy component inside a Suspense to let the user know that we're still importing the file.
-
-### With data loader
+## Example
 
 ```tsx
 // Dashboard.tsx
@@ -56,26 +10,27 @@ export default function Dashboard() {
    return <>Dashboard</>;
 }
 
-// User.tsx
-export loader(params: any) {
-   return fetch("/api/user" + params.userId);
+// Item.tsx
+export loader(params: { id: string; }) {
+   return fetch("/api/item" + params.id);
 }
 
-export default function User(props : { params: any; data: any; }) {
+export default function Item(props : { params: { id: string; }; data: any; }) {
    return (
       <>
-         userId: {props.params.userId}
+         id: {props.params.id}
          data: {JSON.stringify(props.data)}
       </>
    );
 }
 
 // Layout.tsx
-import { Route, Routes } from "@tigerlegab/react-router";
-import { Spinner } from "./Spinner";
+import { Router, BrowserRoute } from "@tigerlegab/react-router";
+import { Loader } from "./Loader";
 
-const NotFound = lazyLoad(() => import("./NotFound"));
-const routes: Route[] = [
+const Page404 = lazyLoad(() => import("./Page404"));
+const Page500 = lazyLoad(() => import("./Page500"));
+const routes: BrowserRoute[] = [
    {
       path: "/",
       element: () => import("./Dashboard"),
@@ -91,14 +46,15 @@ export default function Layout() {
       <>
          <header>
             <Link to="/">Dashboard</Link>
-            <Link to="/my-user-id">User</Link>
+            <Link to="/item/0001">Item One</Link>
          </header>
 
          <main>
-            <Routes
+           <Router
                routes={routes}
-               page404={<NotFound />}
-               pageLoader={{ element: <Spinner /> }}
+               page404={<Page404 />}
+               page500={(error) => <Page500 error={error} />}
+               pageLoader={{ element: <Loader />, firstLoadOnly: true }}
             />
          </main>
       </>
@@ -106,14 +62,12 @@ export default function Layout() {
 }
 ```
 
-If your going to navigate to `/my-user-id`, it will look for the matching route, then import the file, then call the data loader function and waits for the response before displaying the element. You can use `useLocationStatus()` to handle loading state like the below example.
-
-## With loading bar
+During navigation, it will first look for the matching route, then import the file, then call the data loader function and waits for the response before displaying the content. You can use `useNavigationStatus()` to handle loading state. For example a loading bar:
 
 ```tsx
-export default function Layout() {
-   const status = useLocationStatus();
-   const [progress, setProgress] = useState(0);
+export function LoadingBar() {
+  const status = useNavigationStatus();
+  const [progress, setProgress] = useState(0);
 
    useEffect(() => {
       if (status === "loaded") {
@@ -129,47 +83,44 @@ export default function Layout() {
    }, [status]);
 
    return (
-      <>
-         <Progress
-            value={progress}
-            hidden={progress === 0}
-         />
-
-         <header>
-            <Link to="/">Dashboard</Link>
-            <Link to="/my-user-id">User</Link>
-         </header>
-
-         <main>
-            <Routes
-               routes={routes}
-               page404={<NotFound />}
-               pageLoader={{ element: <Spinner />, firstLoadOnly: true }}
-            />
-         </main>
-      </>
+      <Progress
+         size="xs"
+         radius={0}
+         value={progress}
+         classNames={classes}
+         data-mounted={progress > 0}
+      />
    );
+}
+
+function randomInt(min: number, max: number): number {
+  return Math.floor(Math.random() * (max - min + 1) + min)
 }
 ```
 
 ## Components
 
-* `Routes`
+* `Router`
 
 #### Props
 
 ```ts
-interface RoutesProps {
+interface RouterProps {
    /**
     * @required
     * List of routes
     */
-   routes: Route[];
+   routes: BrowserRoute[];
    /**
     * @required
     * Default display if theres no matching route
     */
    page404: React.ReactNode;
+   /**
+    * @optional
+    * Default display if loader returns an error
+    */
+   page500: page500: (error: string) => React.ReactNode;
    /**
     * @optional
     * Default display if location status is in pending state
@@ -182,7 +133,7 @@ interface RoutesProps {
    };
 }
 
-interface Route {
+interface BrowserRoute {
    /**
     * @required
     * The path to match for this route
@@ -201,8 +152,8 @@ interface Route {
 
 ## Hooks
 
-* `useLocation` - Listens to location changes and returns the current location data.
-* `useLocationStatus` - Listens to location status changes and returns the current location status. Statuses are `pending` and `loaded`.
+* `useBrowserLocation` - Listens to location changes and returns the current location data.
+* `useNavigationStatus` - Listens to location status changes and returns the current location status. Statuses are `pending` and `loaded`.
 
 ## Utils
 Functions that can also be used outside of react.
