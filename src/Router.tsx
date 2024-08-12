@@ -29,5 +29,9 @@ export function Router({ routes, page404, page500, pageLoader }: RouterProps) {
 	if (status === "pending" && pageLoader && (!pageLoader.firstLoadOnly || (pageLoader.firstLoadOnly && firstLoad)))
 		return pageLoader.element;
 
-	return content || page404;
+	if (!content) return page404;
+
+	if (typeof content.element !== "function") return content.element;
+
+	return <content.element params={content.params} data={content.data} />;
 }

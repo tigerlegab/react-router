@@ -17,8 +17,14 @@ export interface BrowserLocation {
    };
 }
 
+export interface BrowserContent {
+   element: ((props?: any) => React.JSX.Element) | React.ReactNode;
+   params?: any;
+   data?: any;
+}
+
 export interface BrowserRouter extends BrowserLocation {
-   content: React.ReactNode;
+   content: BrowserContent | null;
 }
 
 export interface NavigateOptions {
@@ -72,7 +78,7 @@ function navigate(path: string, options: NavigateOptions = {}) {
    if (options.replace) window.history.replaceState(_s_, "", _n_);
    else window.history.pushState(_s_, "", _n_);
 
-   loadBrowserContent(_n_).then((content: React.ReactNode) => {
+   loadBrowserContent(_n_).then((content) => {
       _router = { ...init, content };
       _subscribers.forEach((callback) => callback());
       options.callback?.();
@@ -87,12 +93,12 @@ async function loadBrowserContent(path: string) {
          try {
             const importEl = await match.route.element();
             const data = importEl.loader ? await importEl.loader(match.params) : null;
-            return importEl.default({ params: match.params, data });
+            return { element: importEl.default, params: match.params, data } as BrowserContent;
          } catch (error) {
-            return _errorEl(error as string);
+            return { element: _errorEl(error as string) };
          }
       } else {
-         return match.route.element;
+         return { element: match.route.element };
       }
    } else {
       return null;
