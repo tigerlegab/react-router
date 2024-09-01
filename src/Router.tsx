@@ -18,12 +18,7 @@ export function Router({ routes, page404, page500, pageLoader }: RouterProps) {
 	useEffect(() => {
 		setRoutes(routes);
 		setErrorElement(page500);
-		navigate("", {
-			replace: true,
-			search: true,
-			state: true,
-			callback: () => setFirstLoad(false)
-		});
+		navigate("", { replace: true, state: window.history.state, callback: () => setFirstLoad(false) });
 	}, []);
 
 	if (status === "pending" && pageLoader && (!pageLoader.firstLoadOnly || (pageLoader.firstLoadOnly && firstLoad)))

@@ -29,8 +29,7 @@ export interface BrowserRouter extends BrowserLocation {
 
 export interface NavigateOptions {
    replace?: boolean;
-   state?: boolean | any;
-   search?: boolean | string;
+   state?: any;
    callback?: () => void;
 }
 
@@ -55,30 +54,30 @@ export const browserRouter = {
 };
 
 function onpopstatechanged(evnt: PopStateEvent) {
-   navigate("", { replace: true, state: evnt.state, search: true });
+   navigate("", { replace: true, state: evnt.state });
 }
 
 function navigate(path: string, options: NavigateOptions = {}) {
    navigationStatus.setStatus("pending");
-   const _q_ = options.search && options.search !== true ? options.search : (options.search === true ? window.location.search : "");
-   const _s_ = options.state && options.state !== true ? options.state : window.history.state;
-   const _n_ = (path ? path : window.location.pathname) + (!_q_ || _q_.startsWith("?") ? _q_ : "?" + _q_);
+   const npath = path ? path : window.location.pathname;
+   const qry = path ? path.split("?")[0] : window.location.search;
 
    let init: any = {};
-   if (_q_) {
-      const _p = new window.URLSearchParams(_q_);
-      const _o: { [x: string]: any; } = {};
-      _p.forEach((value, key) => { _o[key] = value; });
-      init = { path: _n_, state: _s_, search: _o };
+   if (qry) {
+      const params = new window.URLSearchParams(qry);
+      const search: { [x: string]: any; } = {};
+      params.forEach((value, key) => { search[key] = value; });
+      init = { path: npath, state: options.state, search };
    }
    else {
-      init = { path: _n_, state: _s_ };
+      init = { path: npath, state: options.state };
    }
 
-   if (options.replace) window.history.replaceState(_s_, "", _n_);
-   else window.history.pushState(_s_, "", _n_);
+   const url = npath + (!qry || qry.startsWith("?") ? qry : "?" + qry);
+   if (options.replace) window.history.replaceState(options.state, "", url);
+   else window.history.pushState(options.state, "", url);
 
-   loadBrowserContent(_n_).then((content) => {
+   loadBrowserContent(npath).then((content) => {
       _router = { ...init, content };
       _subscribers.forEach((callback) => callback());
       options.callback?.();
