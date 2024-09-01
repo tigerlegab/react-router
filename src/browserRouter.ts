@@ -59,8 +59,9 @@ function onpopstatechanged(evnt: PopStateEvent) {
 
 function navigate(path: string, options: NavigateOptions = {}) {
    navigationStatus.setStatus("pending");
-   const npath = path ? path : window.location.pathname;
-   const qry = path ? path.split("?")[0] : window.location.search;
+   const split = path.split("?");
+   const npath = path ? split[0] : window.location.pathname;
+   const qry = path ? (split.length > 1 ? "?" + split[1] : "") : window.location.search;
 
    let init: any = {};
    if (qry) {
@@ -73,9 +74,8 @@ function navigate(path: string, options: NavigateOptions = {}) {
       init = { path: npath, state: options.state };
    }
 
-   const url = npath + (!qry || qry.startsWith("?") ? qry : "?" + qry);
-   if (options.replace) window.history.replaceState(options.state, "", url);
-   else window.history.pushState(options.state, "", url);
+   if (options.replace) window.history.replaceState(options.state, "", npath + qry);
+   else window.history.pushState(options.state, "", npath + qry);
 
    loadBrowserContent(npath).then((content) => {
       _router = { ...init, content };

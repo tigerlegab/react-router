@@ -183,13 +183,9 @@ interface NavigateOptions {
     */
    replace?: boolean;
    /**
-    * Set to `true` to use `window.history.state` otherwise provide a value or none
+    * The value for `window.history.state`
     */
    state?: boolean | any;
-   /**
-    * Set to `true` to use `window.location.search` otherwise provide a string value (eq. "search=name&age=10")
-    */
-   search?: boolean | string;
 }
 ```
 
@@ -212,4 +208,4 @@ See [regexparam usage](https://github.com/lukeed/regexparam/blob/main/readme.md#
 
 ## Developement issue
 
-1. Hot reload not working in development. You need to refresh the browser to view the updates.
+1. Hot reload not working in development. You may need to refresh the browser to view the updates.
